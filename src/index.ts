@@ -8,7 +8,7 @@ import createRoutes from './routes/createRoutes';
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 const userService = new UserService();
 
 app.use(
@@ -172,68 +172,72 @@ app.get('/profile', async (req, res) => {
             <h2>Create Agent</h2>
             
             <form id="agentForm" action="/create/agent" method="POST" enctype="multipart/form-data">
-              <div class="form-group">
-                <label class="file-label" for="main_character">Main Character JSON:</label>
-                <input 
-                  type="file" 
-                  id="main_character" 
-                  name="main_character" 
-                  class="file-input"
-                  accept=".json"
-                  onchange="validateFile(this, 'main_character.json')"
-                  required
-                />
-                <div id="main_character_preview" class="file-preview"></div>
-                <div id="main_character_error" class="error"></div>
-              </div>
-  
-              <div class="form-group">
-                <label class="file-label" for="dev_character">Dev Character JSON:</label>
-                <input 
-                  type="file" 
-                  id="dev_character" 
-                  name="dev_character" 
-                  class="file-input"
-                  accept=".json"
-                  onchange="validateFile(this, 'dev_character.json')"
-                  required
-                />
-                <div id="dev_character_preview" class="file-preview"></div>
-                <div id="dev_character_error" class="error"></div>
-              </div>
-  
-              <div class="form-group">
-                <label class="file-label" for="bd_character">BD Character JSON:</label>
-                <input 
-                  type="file" 
-                  id="bd_character" 
-                  name="bd_character" 
-                  class="file-input"
-                  accept=".json"
-                  onchange="validateFile(this, 'bd_character.json')"
-                  required
-                />
-                <div id="bd_character_preview" class="file-preview"></div>
-                <div id="bd_character_error" class="error"></div>
-              </div>
+  <div class="form-group">
+    <label class="file-label" for="main_file">Main Character File:</label>
+    <input 
+      type="file" 
+      id="main_file" 
+      name="main_file" 
+      class="file-input"
+      accept=".json"
+      onchange="validateFile(this, 'main.character.json', 'json')"
+      required
+    />
+    <div class="file-info">Required filename: main.character.json</div>
+    <div id="main_file_preview" class="file-preview"></div>
+    <div id="main_file_error" class="error"></div>
+  </div>
 
-               <div class="form-group">
-                <label class="file-label" for="env_file">env file</label>
-                <input 
-                  type="file" 
-                  id="env_file" 
-                  name="env_file" 
-                  class="file-input"
-                  accept=".txt"
-                  onchange="validateFile(this, 'bd_character.json')"
-                  required
-                />
-                <div id="env_file_preview" class="file-preview"></div>
-                <div id="env_file_error" class="error"></div>
-              </div>
-  
-              <button type="submit">Create Agent</button>
-            </form>
+  <div class="form-group">
+    <label class="file-label" for="dev_file">Dev Character File:</label>
+    <input 
+      type="file" 
+      id="dev_file" 
+      name="dev_file" 
+      class="file-input"
+      accept=".json"
+      onchange="validateFile(this, 'dev.character.json', 'json')"
+      required
+    />
+    <div class="file-info">Required filename: dev.character.json</div>
+    <div id="dev_file_preview" class="file-preview"></div>
+    <div id="dev_file_error" class="error"></div>
+  </div>
+
+  <div class="form-group">
+    <label class="file-label" for="bd_file">BD Character File:</label>
+    <input 
+      type="file" 
+      id="bd_file" 
+      name="bd_file" 
+      class="file-input"
+      accept=".json"
+      onchange="validateFile(this, 'bd.character.json', 'json')"
+      required
+    />
+    <div class="file-info">Required filename: bd.character.json</div>
+    <div id="bd_file_preview" class="file-preview"></div>
+    <div id="bd_file_error" class="error"></div>
+  </div>
+
+  <div class="form-group">
+    <label class="file-label" for="env_file">Environment File:</label>
+    <input 
+      type="file" 
+      id="env_file" 
+      name="env_file" 
+      class="file-input"
+      accept=".txt"
+      onchange="validateFile(this, 'env.txt', 'txt')"
+      required
+    />
+    <div class="file-info">Required filename: env.txt</div>
+    <div id="env_file_preview" class="file-preview"></div>
+    <div id="env_file_error" class="error"></div>
+  </div>
+
+  <button type="submit">Create Agent</button>
+</form>
   
             <script>
     function validateFile(input, expectedName, fileType) {

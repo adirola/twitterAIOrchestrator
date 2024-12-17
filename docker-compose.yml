@@ -4,13 +4,13 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "4000:4000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/twitter_oauth_db
       - NODE_ENV=development
       - TWITTER_CLIENT_ID=VTN3UkpPZlpzRmFtUWQ5VTV1ZTQ6MTpjaQ
       - TWITTER_CLIENT_SECRET=uBDMy1a18HtrIbebwm52Z-sAiRTB-v8GlMC_w3PngP-ckBh_k1
-      - CALLBACK_URL=http://localhost:3000/callback
+      - CALLBACK_URL=https://ominous-sniffle-7qvggrqvjrfx6r6-4000.app.github.dev/callback
       - SESSION_SECRET=dataisking
     depends_on:
       db:

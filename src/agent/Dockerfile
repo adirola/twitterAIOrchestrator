@@ -29,19 +29,19 @@ WORKDIR /app
 COPY ./eliza-starter/package.json ./eliza-starter/pnpm-lock.yaml ./
 
 # Install the app's dependencies using pnpm
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # Copy the rest of the application code
 COPY ./eliza-starter/. .
 
-COPY ./main.character.json .
+COPY ./main.character.json ./characters/.
 
-COPY ./dev.character.json .
+COPY ./dev.character.json ./characters/.
 
-COPY ./bd.character.json .
+COPY ./bd.character.json ./characters/.
 
 # Expose the port the app will run on (you can modify this if needed)
 EXPOSE 3000
 
 # Set up pm2 to run your application in production mode
-CMD ["pnpm", "start","--non-interactive","--character='main.character.json'"]
+CMD ["pnpm", "start","--non-interactive","--character='characters/main.character.json'"]

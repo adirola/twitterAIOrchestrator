@@ -44,10 +44,10 @@ const upload = multer({
     },
     fileFilter: fileFilter
 }).fields([
-    { name: 'main.character.json' },
-    { name: 'dev.character.json' },
+    { name: 'main.json' },
+    { name: 'dev.json' },
     { name: 'env.txt' },
-    { name: 'bd.character.json' }
+    { name: 'bd.json' }
 ]);
 
 const depDir = path.join(__dirname, '..', 'deployments');
@@ -78,9 +78,9 @@ export const createController = {
                     if (
                         !projectName ||
                         !version ||
-                        !files['main.character.json'] ||
-                        !files['dev.character.json'] ||
-                        !files['bd.character.json'] ||
+                        !files['main.json'] ||
+                        !files['dev.json'] ||
+                        !files['bd.json'] ||
                         !files['env.txt']
                     ) {
                         return res.status(400).json({ error: 'Missing required files or parameters' });
