@@ -3,6 +3,8 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 import path from 'path';
 import AdmZip from 'adm-zip';
+import { AwsHandler } from '../aws/AwsHandler';
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -40,9 +42,9 @@ export class DockerizeAgent {
         this._copyRecursively(zipPath,tempDir);
 
         // Create Holder S3 Bucket. (Bucket Name would be the hash of ProjectName provided by the user)
-        // const aws = new AwsHandler();
-        // const bucketName: string = crypto.createHash('md5').update(`${projectName}`).digest('hex');
-        // await aws.createS3Bucket(bucketName);
+        const aws = new AwsHandler();
+        const bucketName: string = crypto.createHash('md5').update(`${projectName}`).digest('hex');
+        await aws.createS3Bucket(bucketName);
 
         // Create Env File.
         this.createEnvFile(requestId, tempDir);
@@ -58,14 +60,16 @@ export class DockerizeAgent {
             console.log('Docker build output:', buildResult);
             console.log('Docker image build completed successfully');
 
-            const containerName = `${projectName}-container`;
-            console.log('Starting Docker container...');
-            await this.docker.command(`run -d --name ${containerName} -p 3000:3000 ${imageName}`);
-            console.log(`Docker container started successfully. Container name: ${containerName}`);
+            //To deploy locally
+
+            // const containerName = `${projectName}-container`;
+            // console.log('Starting Docker container...');
+            // await this.docker.command(`run -d --name ${containerName} -p 3000:3000 ${imageName}`);
+            // console.log(`Docker container started successfully. Container name: ${containerName}`);
             
-            // Print container info
-            const containerInfo = await this.docker.command(`ps --filter name=${containerName}`);
-            console.log('Container information:', containerInfo);
+            // // Print container info
+            // const containerInfo = await this.docker.command(`ps --filter name=${containerName}`);
+            // console.log('Container information:', containerInfo);
 
             return imageName;
         } catch (error) {

@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import {processRequest} from './fileProcessorController'
+import { uploadFilesToS3 } from './s3HelperController';
+import { AwsHandler } from '../aws/AwsHandler';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -88,6 +90,13 @@ export const createController = {
                     // Create RequestId & AgentId
                     const agentId = crypto.createHash('md5').update(`${projectName}`).digest('hex');
                     const requestId = crypto.createHash('sha256').update(`${projectName}-${version}`).digest('hex');
+
+                    // Upload Documents to S3.
+                    await uploadFilesToS3(
+                        projectName,
+                        requestId,
+                        files
+                    );
     
                     // Store Progress.
                     const initialOutput: any = {

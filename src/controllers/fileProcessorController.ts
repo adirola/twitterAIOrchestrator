@@ -1,5 +1,5 @@
 import { DockerizeAgent } from './applicationDockerController';
-//import { AwsHandler } from '../aws/AwsHandler';
+import { AwsHandler } from '../aws/AwsHandler';
 import fs from 'fs';
 import path from 'path';
 
@@ -22,23 +22,23 @@ export const processRequest = async (files: { [fieldname: string]: Express.Multe
             info: "Agent Deployment Image Built."
         }));
 
-        // 3. Prepare hosting environment.
-        // const awsHandler = new AwsHandler();
+        //3. Prepare hosting environment.
+        const awsHandler = new AwsHandler();
         
-        // // 3.1 Prepare ECR Repository.
-        // const ecrRepositoryUri = await awsHandler.createECRRepository(projectName);
-        // console.log("Worker ECR Repo", ecrRepositoryUri);
+        // 3.1 Prepare ECR Repository.
+        const ecrRepositoryUri = await awsHandler.createECRRepository(projectName);
+        console.log("Worker ECR Repo", ecrRepositoryUri);
 
         // // 3.2 Upload Docker Image to ECR.
-        // const ecrUri = await awsHandler.uploadToECR(ecrRepositoryUri, imageUri, version);
-        // console.log("Worker ECR ImageURi", ecrUri);
+        const ecrUri = await awsHandler.uploadToECR(ecrRepositoryUri, imageUri, version);
+        console.log("Worker ECR ImageURi", ecrUri);
         fs.writeFileSync(outputPath, JSON.stringify({
             status: "BUILDING",
             info: "Agent Deployment Image Uploaded."
         }));
 
         // 3.3 Create App Runner Service or deploy locally
-        // await awsHandler.createAppRunnerService(ecrUri, projectName);
+        await awsHandler.createAppRunnerService(ecrUri, projectName);
         fs.writeFileSync(outputPath, JSON.stringify({
             status: "FINISHING",
             info: "Agent is being deployed!"
