@@ -111,178 +111,173 @@ app.get('/profile', async (req, res) => {
     const me = await userClient.v2.me();
 
     res.send(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Create Agent</title>
-            <style>
-              body { 
-                font-family: Arial, sans-serif; 
-                max-width: 800px; 
-                margin: 0 auto; 
-                padding: 20px; 
-              }
-              .form-group { 
-                margin-bottom: 20px; 
-                padding: 15px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-              }
-              .file-label {
-                display: block;
-                margin-bottom: 10px;
-                font-weight: bold;
-              }
-              .file-input {
-                display: block;
-                width: 100%;
-                padding: 8px;
-                margin-top: 5px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-              }
-              .file-preview {
-                margin-top: 10px;
-                padding: 10px;
-                background-color: #f5f5f5;
-                border-radius: 4px;
-                display: none;
-              }
-              button { 
-                padding: 12px 24px;
-                background: #007bff;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 16px;
-              }
-              button:hover { 
-                background: #0056b3;
-              }
-              .error {
-                color: red;
-                margin-top: 5px;
-                display: none;
-              }
-            </style>
-          </head>
-          <body>
-            <h1>Welcome ${me.data.name}!</h1>
-            <h2>Create Agent</h2>
-            
-            <form id="agentForm" action="/create/agent" method="POST" enctype="multipart/form-data">
-  <div class="form-group">
-    <label class="file-label" for="main_file">Main Character File:</label>
-    <input 
-      type="file" 
-      id="main_file" 
-      name="main_file" 
-      class="file-input"
-      accept=".json"
-      onchange="validateFile(this, 'main.character.json', 'json')"
-      required
-    />
-    <div class="file-info">Required filename: main.character.json</div>
-    <div id="main_file_preview" class="file-preview"></div>
-    <div id="main_file_error" class="error"></div>
-  </div>
-
-  <div class="form-group">
-    <label class="file-label" for="dev_file">Dev Character File:</label>
-    <input 
-      type="file" 
-      id="dev_file" 
-      name="dev_file" 
-      class="file-input"
-      accept=".json"
-      onchange="validateFile(this, 'dev.character.json', 'json')"
-      required
-    />
-    <div class="file-info">Required filename: dev.character.json</div>
-    <div id="dev_file_preview" class="file-preview"></div>
-    <div id="dev_file_error" class="error"></div>
-  </div>
-
-  <div class="form-group">
-    <label class="file-label" for="bd_file">BD Character File:</label>
-    <input 
-      type="file" 
-      id="bd_file" 
-      name="bd_file" 
-      class="file-input"
-      accept=".json"
-      onchange="validateFile(this, 'bd.character.json', 'json')"
-      required
-    />
-    <div class="file-info">Required filename: bd.character.json</div>
-    <div id="bd_file_preview" class="file-preview"></div>
-    <div id="bd_file_error" class="error"></div>
-  </div>
-
-  <div class="form-group">
-    <label class="file-label" for="env_file">Environment File:</label>
-    <input 
-      type="file" 
-      id="env_file" 
-      name="env_file" 
-      class="file-input"
-      accept=".txt"
-      onchange="validateFile(this, 'env.txt', 'txt')"
-      required
-    />
-    <div class="file-info">Required filename: env.txt</div>
-    <div id="env_file_preview" class="file-preview"></div>
-    <div id="env_file_error" class="error"></div>
-  </div>
-
-  <button type="submit">Create Agent</button>
-</form>
-  
-            <script>
-    function validateFile(input, expectedName, fileType) {
-      const file = input.files[0];
-      const previewDiv = document.getElementById(input.id + '_preview');
-      const errorDiv = document.getElementById(input.id + '_error');
-      
-      // Reset displays
-      previewDiv.style.display = 'none';
-      errorDiv.style.display = 'none';
-      
-      if (file) {
-        // Check file name
-        if (file.name !== expectedName) {
-          errorDiv.textContent = 'File must be named ' + expectedName;
-          errorDiv.style.display = 'block';
-          input.value = '';
-          return;
-        }
-
-        // Preview content
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          if (fileType === 'json') {
-            try {
-              const content = JSON.parse(e.target.result);
-              previewDiv.textContent = JSON.stringify(content, null, 2);
-              previewDiv.style.display = 'block';
-            } catch (err) {
-              errorDiv.textContent = 'Invalid JSON format';
-              errorDiv.style.display = 'block';
-              input.value = '';
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Create Agent</title>
+          <style>
+            body { 
+              font-family: Arial, sans-serif; 
+              max-width: 800px; 
+              margin: 0 auto; 
+              padding: 20px; 
             }
-          } else if (fileType === 'txt') {
-            previewDiv.textContent = e.target.result;
-            previewDiv.style.display = 'block';
-          }
-        };
-        reader.readAsText(file);
-      }
-    }
-  </script>
-          </body>
-        </html>
-      `);
+            .form-group { 
+              margin-bottom: 20px; 
+              padding: 15px;
+              border: 1px solid #ddd;
+              border-radius: 5px;
+            }
+            .file-label {
+              display: block;
+              margin-bottom: 10px;
+              font-weight: bold;
+            }
+            .file-input {
+              display: block;
+              width: 100%;
+              padding: 8px;
+              margin-top: 5px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+            }
+            .file-preview {
+              margin-top: 10px;
+              padding: 10px;
+              background-color: #f5f5f5;
+              border-radius: 4px;
+              display: none;
+            }
+            button { 
+              padding: 12px 24px;
+              background: #007bff;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-size: 16px;
+            }
+            button:hover { 
+              background: #0056b3;
+            }
+            .error {
+              color: red;
+              margin-top: 5px;
+              display: none;
+            }
+            .form-header {
+              margin-bottom: 20px;
+            }
+            .project-info {
+              margin-bottom: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Welcome!</h1>
+          <div class="form-header">
+            <h2>Create Agent</h2>
+          </div>
+          
+          <form id="agentForm" action="/create/agent" method="POST" enctype="multipart/form-data">
+            <div class="project-info">
+              <div class="form-group">
+                <label for="projectName">Project Name:</label>
+                <input type="text" id="projectName" name="projectName" required class="file-input">
+              </div>
+              <div class="form-group">
+                <label for="version">Version:</label>
+                <input type="text" id="version" name="version" required class="file-input">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="file-label" for="main_json">Main Configuration:</label>
+              <input 
+                type="file" 
+                id="main_json" 
+                name="main.json" 
+                class="file-input"
+                accept=".json"
+                onchange="validateFile(this)"
+                required
+              />
+              <div id="main_json_preview" class="file-preview"></div>
+              <div id="main_json_error" class="error"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="file-label" for="dev_json">Dev Configuration:</label>
+              <input 
+                type="file" 
+                id="dev_json" 
+                name="dev.json" 
+                class="file-input"
+                accept=".json"
+                onchange="validateFile(this)"
+                required
+              />
+              <div id="dev_json_preview" class="file-preview"></div>
+              <div id="dev_json_error" class="error"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="file-label" for="bd_json">BD Configuration:</label>
+              <input 
+                type="file" 
+                id="bd_json" 
+                name="bd.json" 
+                class="file-input"
+                accept=".json"
+                onchange="validateFile(this)"
+                required
+              />
+              <div id="bd_json_preview" class="file-preview"></div>
+              <div id="bd_json_error" class="error"></div>
+            </div>
+
+            <button type="submit">Create Agent</button>
+          </form>
+
+          <script>
+            function validateFile(input) {
+              const file = input.files[0];
+              const previewDiv = document.getElementById(input.id + '_preview');
+              const errorDiv = document.getElementById(input.id + '_error');
+              
+              // Reset displays
+              previewDiv.style.display = 'none';
+              errorDiv.style.display = 'none';
+              
+              if (file) {
+                // Check file extension
+                if (!file.name.endsWith('.json')) {
+                  errorDiv.textContent = 'File must be a JSON file';
+                  errorDiv.style.display = 'block';
+                  input.value = '';
+                  return;
+                }
+
+                // Preview content
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                  try {
+                    const content = JSON.parse(e.target.result);
+                    previewDiv.textContent = JSON.stringify(content, null, 2);
+                    previewDiv.style.display = 'block';
+                  } catch (err) {
+                    errorDiv.textContent = 'Invalid JSON format';
+                    errorDiv.style.display = 'block';
+                    input.value = '';
+                  }
+                };
+                reader.readAsText(file);
+              }
+            }
+          </script>
+        </body>
+      </html>
+  `);
   } catch (error) {
     console.error('Error fetching profile:', error);
     res.status(500).send('Failed to fetch profile');
