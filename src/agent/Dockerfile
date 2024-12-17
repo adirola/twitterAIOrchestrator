@@ -34,6 +34,8 @@ RUN pnpm install --no-frozen-lockfile
 # Copy the rest of the application code
 COPY ./eliza-starter/. .
 
+COPY ./.env .
+
 COPY ./main.character.json ./characters/.
 
 COPY ./dev.character.json ./characters/.
