@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/twitter_oauth_db
+      - NODE_ENV=development
+      - TWITTER_CLIENT_ID=VTN3UkpPZlpzRmFtUWQ5VTV1ZTQ6MTpjaQ
+      - TWITTER_CLIENT_SECRET=uBDMy1a18HtrIbebwm52Z-sAiRTB-v8GlMC_w3PngP-ckBh_k1
+      - CALLBACK_URL=http://localhost:3000/callback
+      - SESSION_SECRET=dataisking
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - twitter-network
+
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=twitter_oauth_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - twitter-network
+
+volumes:
+  postgres_data:
+
+networks:
+  twitter-network:
+    driver: bridge
