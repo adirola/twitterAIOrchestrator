@@ -35,7 +35,7 @@ export class DockerizeAgent {
         // // Create Dockerfile.
         this.createDockerFile(tempDir);
 
-        const zipPath: string = path.join(__dirname,'files' ,'aiagent.zip');
+        const zipPath: string = path.join(__dirname,'..','agent' ,'aiagent.zip');
 
         this._copyRecursively(zipPath,tempDir);
 
@@ -89,7 +89,7 @@ export class DockerizeAgent {
         dirPath: string
     ) {
         const dockerfilePath = path.join(dirPath, 'Dockerfile');
-        const dockerPath = path.join(__dirname, 'files', "Dockerfile");
+        const dockerPath = path.join(__dirname, '..', 'agent', 'Dockerfile');
         fs.copyFileSync(dockerPath, dockerfilePath);
         console.log(`Dockerfile created at ${dockerfilePath}`);
     }

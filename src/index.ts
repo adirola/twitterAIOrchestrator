@@ -321,7 +321,7 @@ app.post('/tweet', express.urlencoded({ extended: true }), async (req, res) => {
     }
   });
 
-  app.use('/create', createRoutes);
+app.use('/create', createRoutes);
 
 
 
