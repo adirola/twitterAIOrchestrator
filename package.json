@@ -5,7 +5,7 @@
     "scripts": {
       "start": "tsc && node dist/index.js",
       "build": "tsc",
-      "dev": "nodemon src/index.ts",
+      "dev": "nodemon",
       "migrate": "node-pg-migrate"
     },
     "dependencies": {
