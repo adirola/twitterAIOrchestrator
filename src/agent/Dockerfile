@@ -38,10 +38,6 @@ COPY ./.env .
 
 COPY ./main.character.json ./characters/.
 
-COPY ./dev.character.json ./characters/.
-
-COPY ./bd.character.json ./characters/.
-
 # Expose the port the app will run on (you can modify this if needed)
 EXPOSE 3000
 

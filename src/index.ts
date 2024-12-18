@@ -110,174 +110,231 @@ app.get('/profile', async (req, res) => {
     const userClient = new TwitterApi(accessToken);
     const me = await userClient.v2.me();
 
-    res.send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Create Agent</title>
-          <style>
-            body { 
-              font-family: Arial, sans-serif; 
-              max-width: 800px; 
-              margin: 0 auto; 
-              padding: 20px; 
-            }
-            .form-group { 
-              margin-bottom: 20px; 
-              padding: 15px;
-              border: 1px solid #ddd;
-              border-radius: 5px;
-            }
-            .file-label {
-              display: block;
-              margin-bottom: 10px;
-              font-weight: bold;
-            }
-            .file-input {
-              display: block;
-              width: 100%;
-              padding: 8px;
-              margin-top: 5px;
-              border: 1px solid #ccc;
-              border-radius: 4px;
-            }
-            .file-preview {
-              margin-top: 10px;
-              padding: 10px;
-              background-color: #f5f5f5;
-              border-radius: 4px;
-              display: none;
-            }
-            button { 
-              padding: 12px 24px;
-              background: #007bff;
-              color: white;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              font-size: 16px;
-            }
-            button:hover { 
-              background: #0056b3;
-            }
-            .error {
-              color: red;
-              margin-top: 5px;
-              display: none;
-            }
-            .form-header {
-              margin-bottom: 20px;
-            }
-            .project-info {
-              margin-bottom: 20px;
-            }
-          </style>
-        </head>
-        <body>
-          <h1>Welcome!</h1>
-          <div class="form-header">
-            <h2>Create Agent</h2>
-          </div>
-          
-          <form id="agentForm" action="/create/agent" method="POST" enctype="multipart/form-data">
-            <div class="project-info">
-              <div class="form-group">
-                <label for="projectName">Project Name:</label>
-                <input type="text" id="projectName" name="projectName" required class="file-input">
-              </div>
-              <div class="form-group">
-                <label for="version">Version:</label>
-                <input type="text" id="version" name="version" required class="file-input">
-              </div>
-            </div>
+    const twitterCredsJson = JSON.stringify({
+      CLIENT_ID: process.env.CLIENT_ID || '',
+      CLIENT_SECRET: process.env.CLIENT_SECRET || '',
+      TWITTER_ACCESS_TOKEN: user.access_token || '',
+      TWITTER_REFRESH_TOKEN: user.refresh_token || ''
+    });
 
-            <div class="form-group">
-              <label class="file-label" for="main_json">Main Configuration:</label>
-              <input 
-                type="file" 
-                id="main_json" 
-                name="main.json" 
-                class="file-input"
-                accept=".json"
-                onchange="validateFile(this)"
-                required
-              />
-              <div id="main_json_preview" class="file-preview"></div>
-              <div id="main_json_error" class="error"></div>
-            </div>
-
-            <div class="form-group">
-              <label class="file-label" for="dev_json">Dev Configuration:</label>
-              <input 
-                type="file" 
-                id="dev_json" 
-                name="dev.json" 
-                class="file-input"
-                accept=".json"
-                onchange="validateFile(this)"
-                required
-              />
-              <div id="dev_json_preview" class="file-preview"></div>
-              <div id="dev_json_error" class="error"></div>
-            </div>
-
-            <div class="form-group">
-              <label class="file-label" for="bd_json">BD Configuration:</label>
-              <input 
-                type="file" 
-                id="bd_json" 
-                name="bd.json" 
-                class="file-input"
-                accept=".json"
-                onchange="validateFile(this)"
-                required
-              />
-              <div id="bd_json_preview" class="file-preview"></div>
-              <div id="bd_json_error" class="error"></div>
-            </div>
-
-            <button type="submit">Create Agent</button>
-          </form>
-
-          <script>
-            function validateFile(input) {
-              const file = input.files[0];
-              const previewDiv = document.getElementById(input.id + '_preview');
-              const errorDiv = document.getElementById(input.id + '_error');
-              
-              // Reset displays
-              previewDiv.style.display = 'none';
-              errorDiv.style.display = 'none';
-              
-              if (file) {
-                // Check file extension
-                if (!file.name.endsWith('.json')) {
-                  errorDiv.textContent = 'File must be a JSON file';
-                  errorDiv.style.display = 'block';
-                  input.value = '';
-                  return;
-                }
-
-                // Preview content
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                  try {
-                    const content = JSON.parse(e.target.result);
-                    previewDiv.textContent = JSON.stringify(content, null, 2);
-                    previewDiv.style.display = 'block';
-                  } catch (err) {
-                    errorDiv.textContent = 'Invalid JSON format';
-                    errorDiv.style.display = 'block';
-                    input.value = '';
-                  }
-                };
-                reader.readAsText(file);
-              }
-            }
-          </script>
-        </body>
-      </html>
-  `);
+    res.send('<!DOCTYPE html>\n\
+      <html>\n\
+        <head>\n\
+          <title>Create Agent</title>\n\
+          <style>\n\
+            body { \n\
+              font-family: Arial, sans-serif; \n\
+              max-width: 800px; \n\
+              margin: 0 auto; \n\
+              padding: 20px; \n\
+            }\n\
+            .form-group { \n\
+              margin-bottom: 20px; \n\
+              padding: 15px;\n\
+              border: 1px solid #ddd;\n\
+              border-radius: 5px;\n\
+            }\n\
+            .file-label {\n\
+              display: block;\n\
+              margin-bottom: 10px;\n\
+              font-weight: bold;\n\
+            }\n\
+            .file-description {\n\
+              color: #666;\n\
+              font-size: 0.9em;\n\
+              margin-bottom: 10px;\n\
+            }\n\
+            .file-input {\n\
+              display: block;\n\
+              width: 100%;\n\
+              padding: 8px;\n\
+              margin-top: 5px;\n\
+              border: 1px solid #ccc;\n\
+              border-radius: 4px;\n\
+            }\n\
+            .file-preview {\n\
+              margin-top: 10px;\n\
+              padding: 10px;\n\
+              background-color: #f5f5f5;\n\
+              border-radius: 4px;\n\
+              display: none;\n\
+              white-space: pre-wrap;\n\
+              font-family: monospace;\n\
+              font-size: 12px;\n\
+            }\n\
+            button { \n\
+              padding: 12px 24px;\n\
+              background: #007bff;\n\
+              color: white;\n\
+              border: none;\n\
+              border-radius: 5px;\n\
+              cursor: pointer;\n\
+              font-size: 16px;\n\
+            }\n\
+            button:hover { \n\
+              background: #0056b3;\n\
+            }\n\
+            .error {\n\
+              color: red;\n\
+              margin-top: 5px;\n\
+              display: none;\n\
+            }\n\
+          </style>\n\
+        </head>\n\
+        <body>\n\
+          <h1>Welcome, ' + me.data.username + '!</h1>\n\
+          <form id="agentForm" action="/create/agent" method="POST" enctype="multipart/form-data">\n\
+            <div class="form-group">\n\
+              <label class="file-label" for="main_json">Character Configuration File:</label>\n\
+              <div class="file-description">Upload your main.character.json file</div>\n\
+              <input \n\
+                type="file" \n\
+                id="main_json" \n\
+                name="main.json" \n\
+                class="file-input"\n\
+                accept=".json"\n\
+                onchange="validateJsonFile(this)"\n\
+                required\n\
+              />\n\
+              <div id="main_json_preview" class="file-preview"></div>\n\
+              <div id="main_json_error" class="error"></div>\n\
+            </div>\n\
+\n\
+            <div class="form-group">\n\
+              <label class="file-label" for="env_file">Environment Configuration File:</label>\n\
+              <div class="file-description">Upload your env.txt file</div>\n\
+              <input \n\
+                type="file" \n\
+                id="env_file" \n\
+                name="env.txt" \n\
+                class="file-input"\n\
+                accept=".txt"\n\
+                onchange="validateEnvFile(this)"\n\
+                required\n\
+              />\n\
+              <div id="env_file_preview" class="file-preview"></div>\n\
+              <div id="env_file_error" class="error"></div>\n\
+            </div>\n\
+\n\
+            <button type="submit">Create Agent</button>\n\
+          </form>\n\
+\n\
+          <script>\n\
+            // Parse the Twitter credentials from the server-side JSON\n\
+            const twitterCreds = ' + twitterCredsJson + ';\n\
+\n\
+            function validateJsonFile(input) {\n\
+              const file = input.files[0];\n\
+              const previewDiv = document.getElementById(input.id + "_preview");\n\
+              const errorDiv = document.getElementById(input.id + "_error");\n\
+              \n\
+              // Reset displays\n\
+              previewDiv.style.display = "none";\n\
+              errorDiv.style.display = "none";\n\
+              \n\
+              if (file) {\n\
+                // Check file extension\n\
+                if (!file.name.endsWith(".json")) {\n\
+                  errorDiv.textContent = "File must be a JSON file";\n\
+                  errorDiv.style.display = "block";\n\
+                  input.value = "";\n\
+                  return;\n\
+                }\n\
+\n\
+                // Preview content\n\
+                const reader = new FileReader();\n\
+                reader.onload = function(e) {\n\
+                  try {\n\
+                    const content = JSON.parse(e.target.result);\n\
+                    previewDiv.textContent = JSON.stringify(content, null, 2);\n\
+                    previewDiv.style.display = "block";\n\
+                  } catch (err) {\n\
+                    errorDiv.textContent = "Invalid JSON format";\n\
+                    errorDiv.style.display = "block";\n\
+                    input.value = "";\n\
+                  }\n\
+                };\n\
+                reader.readAsText(file);\n\
+              }\n\
+            }\n\
+\n\
+            function validateEnvFile(input) {\n\
+              const file = input.files[0];\n\
+              const previewDiv = document.getElementById(input.id + "_preview");\n\
+              const errorDiv = document.getElementById(input.id + "_error");\n\
+              \n\
+              // Reset displays\n\
+              previewDiv.style.display = "none";\n\
+              errorDiv.style.display = "none";\n\
+              \n\
+              if (file) {\n\
+                // Check file extension\n\
+                if (!file.name.endsWith(".txt")) {\n\
+                  errorDiv.textContent = "File must be a .txt file";\n\
+                  errorDiv.style.display = "block";\n\
+                  input.value = "";\n\
+                  return;\n\
+                }\n\
+\n\
+                // Preview content\n\
+                const reader = new FileReader();\n\
+                reader.onload = function(e) {\n\
+                  try {\n\
+                    let content = e.target.result;\n\
+                    \n\
+                    // Split content into lines and remove empty ones\n\
+                    const lines = content.split("\\n").filter(line => line.trim());\n\
+                    const existingFields = new Set(\n\
+                      lines.map(line => line.split("=")[0].trim())\n\
+                    );\n\
+\n\
+                    // Add missing Twitter credentials\n\
+                    let newContent = content;\n\
+                    \n\
+                    // Add each missing credential\n\
+                    const credentialsToAdd = [];\n\
+                    if (!existingFields.has("CLIENT_ID") && twitterCreds.CLIENT_ID) {\n\
+                      credentialsToAdd.push("CLIENT_ID=" + twitterCreds.CLIENT_ID);\n\
+                    }\n\
+                    if (!existingFields.has("CLIENT_SECRET") && twitterCreds.CLIENT_SECRET) {\n\
+                      credentialsToAdd.push("CLIENT_SECRET=" + twitterCreds.CLIENT_SECRET);\n\
+                    }\n\
+                    if (!existingFields.has("TWITTER_ACCESS_TOKEN") && twitterCreds.TWITTER_ACCESS_TOKEN) {\n\
+                      credentialsToAdd.push("TWITTER_ACCESS_TOKEN=" + twitterCreds.TWITTER_ACCESS_TOKEN);\n\
+                    }\n\
+                    if (!existingFields.has("TWITTER_REFRESH_TOKEN") && twitterCreds.TWITTER_REFRESH_TOKEN) {\n\
+                      credentialsToAdd.push("TWITTER_REFRESH_TOKEN=" + twitterCreds.TWITTER_REFRESH_TOKEN);\n\
+                    }\n\
+\n\
+                    // Add new credentials if any were found\n\
+                    if (credentialsToAdd.length > 0) {\n\
+                      if (!newContent.endsWith("\\n")) {\n\
+                        newContent += "\\n";\n\
+                      }\n\
+                      newContent += credentialsToAdd.join("\\n") + "\\n";\n\
+                    }\n\
+                    \n\
+                    // Create a new Blob and reassign it to the file input\n\
+                    const newFile = new Blob([newContent], { type: "text/plain" });\n\
+                    const dataTransfer = new DataTransfer();\n\
+                    dataTransfer.items.add(new File([newFile], file.name, { type: "text/plain" }));\n\
+                    input.files = dataTransfer.files;\n\
+                    \n\
+                    previewDiv.textContent = newContent;\n\
+                    previewDiv.style.display = "block";\n\
+                  } catch (err) {\n\
+                    console.error("Error processing env file:", err);\n\
+                    errorDiv.textContent = "Error processing file";\n\
+                    errorDiv.style.display = "block";\n\
+                    input.value = "";\n\
+                  }\n\
+                };\n\
+                reader.readAsText(file);\n\
+              }\n\
+            }\n\
+          </script>\n\
+        </body>\n\
+      </html>');
   } catch (error) {
     console.error('Error fetching profile:', error);
     res.status(500).send('Failed to fetch profile');

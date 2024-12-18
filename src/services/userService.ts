@@ -3,6 +3,9 @@ import { User } from '../types';
 import { TwitterApi } from 'twitter-api-v2';
 import pool from '../db';
 
+
+
+
 export class UserService {
   private readonly pool: Pool;
   private readonly client: TwitterApi;
