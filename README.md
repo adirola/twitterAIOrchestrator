@@ -79,6 +79,10 @@ This application allows users to deploy Twitter bots using custom character conf
 4. Image is uploaded to AWS ECR
 5. AWS App Runner deploys the agent
 
+## Architecture
+
+![Architecture Diagram](/assets/Arch.png)
+
 ## Contributing
 
 If you'd like to contribute, please fork the repository and make changes as you'd like. Pull requests are warmly welcome.
