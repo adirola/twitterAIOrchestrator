@@ -1,4 +1,4 @@
-# Twitter Bot Deployment Application
+# Eliza AI agent Orchestration with Twitter V2 API authorization
 
 This application allows users to deploy Twitter bots using custom character configurations on AWS App Runner.
 
